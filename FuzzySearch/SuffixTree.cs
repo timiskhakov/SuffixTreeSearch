@@ -1,19 +1,19 @@
+using System.Collections.Generic;
+
 namespace FuzzySearch;
 
 public class SuffixTree
 {
-    private readonly Node[] _nodes;
+    private readonly List<Node> _nodes = new();
     private readonly char[] _text;
-
-    private int _currentNode = -1;
 
     public SuffixTree(string line)
     {
-        _nodes = new Node[2 * line.Length + 2];
         _text = new char[line.Length];
 
         var position = -1;
-        var root = NewNode(-1, -1);
+        _nodes.Add(new Node(-1, -1));
+        var root = _nodes.Count - 1;
         var activePoint = new ActivePoint();
         var remainder = 0;
 
@@ -31,7 +31,8 @@ public class SuffixTree
             
                 if (!_nodes[activePoint.Node].ContainsKey(_text[activePoint.Edge]))
                 {
-                    var leaf = NewNode(position);
+                    _nodes.Add(new Node(position));
+                    var leaf = _nodes.Count - 1;
                     _nodes[activePoint.Node].AddOrUpdate(_text[activePoint.Edge], leaf);
                     AddSuffixLink(activePoint.Node, ref needSuffixLink);
                 }
@@ -47,10 +48,12 @@ public class SuffixTree
                         break;
                     }
                 
-                    var split = NewNode(_nodes[next].Start, _nodes[next].Start + activePoint.Length);
+                    _nodes.Add(new Node(_nodes[next].Start, _nodes[next].Start + activePoint.Length));
+                    var split = _nodes.Count - 1;
                     _nodes[activePoint.Node].AddOrUpdate(_text[activePoint.Edge], split);
                 
-                    var leaf = NewNode(position);
+                    _nodes.Add(new Node(position));
+                    var leaf = _nodes.Count - 1;
                     _nodes[split].AddOrUpdate(line[i], leaf);
                     _nodes[next].Start += activePoint.Length;
                     _nodes[split].AddOrUpdate(_text[_nodes[next].Start], next);
@@ -114,12 +117,6 @@ public class SuffixTree
         }
 
         return Traverse(node.GetValueByKey(pattern[index]), pattern, index);
-    }
-
-    private int NewNode(int start, int end = int.MaxValue)
-    {
-        _nodes[++_currentNode] = new Node(start, end);
-        return _currentNode;
     }
     
     private void AddSuffixLink(int node, ref int needSuffixLink)
