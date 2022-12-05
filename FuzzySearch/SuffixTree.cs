@@ -28,6 +28,48 @@ public class SuffixTree
         }
     }
 
+    public bool Search(string pattern)
+    {
+        if (pattern.Length > _text.Length) return false;
+        
+        var root = _nodes[0];
+        if (!root.ContainsKey(pattern[0]))
+        {
+            return false;
+        }
+
+        return Traverse(root.GetValueByKey(pattern[0]), pattern, 0);
+    }
+
+    private bool Traverse(int nodeIndex, string pattern, int index)
+    {
+        var node = _nodes[nodeIndex];
+        for (var i = node.Start; i < node.End; i++)
+        {
+            if (index > pattern.Length - 1 || i > _text.Length - 1)
+            {
+                return false;
+            }
+            
+            if (_text[i] == pattern[index])
+            {
+                index++;
+            }
+            
+            if (index == pattern.Length)
+            {
+                return true;
+            }
+        }
+        
+        if (!node.ContainsKey(pattern[index]))
+        {
+            return false;
+        }
+
+        return Traverse(node.GetValueByKey(pattern[index]), pattern, index);
+    }
+
     private char ActiveEdge()
     {
         return _text[_activeEdge];
