@@ -1,71 +1,71 @@
+using System;
+
 namespace FuzzySearch;
 
 public class SuffixTree
 {
     private readonly NodeCollection _nodes = new();
-    private readonly char[] _text;
+    private readonly ReadOnlyMemory<char> _text;
 
     public SuffixTree(string line)
     {
-        _text = new char[line.Length];
+        _text = line.AsMemory();
 
-        var position = -1;
         var root = _nodes.Add(new Node(-1, -1));
         var activePoint = new ActivePoint();
         var remainder = 0;
 
-        foreach (var t in line)
+        for (var i = 0; i < _text.Span.Length; i++)
         {
-            _text[++position] = t;
             var needSuffixLink = -1;
             remainder++;
             while (remainder > 0)
             {
                 if (activePoint.Length == 0)
                 {
-                    activePoint.Edge = position;
+                    activePoint.Edge = i;
                 }
-            
-                if (!_nodes[activePoint.Node].ContainsChild(_text[activePoint.Edge]))
+
+                if (!_nodes[activePoint.Node].ContainsChild(_text.Span[activePoint.Edge]))
                 {
-                    var leaf = _nodes.Add(new Node(position));
-                    _nodes[activePoint.Node].PutChild(_text[activePoint.Edge], leaf);
+                    var leaf = _nodes.Add(new Node(i));
+                    _nodes[activePoint.Node].PutChild(_text.Span[activePoint.Edge], leaf);
                     AddSuffixLink(activePoint.Node, ref needSuffixLink);
                 }
                 else
                 {
-                    var next = _nodes[activePoint.Node][_text[activePoint.Edge]];
-                    if (WalkDown(next, position, ref activePoint)) continue;
-                
-                    if (_text[_nodes[next].Start + activePoint.Length] == t)
+                    var next = _nodes[activePoint.Node][_text.Span[activePoint.Edge]];
+                    if (WalkDown(next, i, ref activePoint)) continue;
+
+                    if (_text.Span[_nodes[next].Start + activePoint.Length] == _text.Span[i])
                     {
                         activePoint.Length++;
                         AddSuffixLink(activePoint.Node, ref needSuffixLink);
                         break;
                     }
-                
+
                     var split = _nodes.Add(new Node(_nodes[next].Start, _nodes[next].Start + activePoint.Length));
-                    _nodes[activePoint.Node].PutChild(_text[activePoint.Edge], split);
-                    
-                    var leaf = _nodes.Add(new Node(position));
-                    _nodes[split].PutChild(t, leaf);
+                    _nodes[activePoint.Node].PutChild(_text.Span[activePoint.Edge], split);
+
+                    var leaf = _nodes.Add(new Node(i));
+                    _nodes[split].PutChild(_text.Span[i], leaf);
                     _nodes[next].Start += activePoint.Length;
-                    _nodes[split].PutChild(_text[_nodes[next].Start], next);
+                    _nodes[split].PutChild(_text.Span[_nodes[next].Start], next);
                     AddSuffixLink(split, ref needSuffixLink);
                 }
-            
+
                 remainder--;
-            
+
                 if (activePoint.Node == root && activePoint.Length > 0)
                 {
                     activePoint.Length--;
-                    activePoint.Edge = position - remainder + 1;
+                    activePoint.Edge = i - remainder + 1;
                 }
                 else
                 {
                     activePoint.Node = _nodes[activePoint.Node].Link > 0
                         ? _nodes[activePoint.Node].Link
-                        : root;   
+                        : root;
                 }
             }
         }
@@ -73,7 +73,7 @@ public class SuffixTree
 
     public bool Search(string pattern)
     {
-        if (pattern.Length > _text.Length) return false;
+        if (pattern.Length > _text.Span.Length) return false;
         
         var root = _nodes[0];
         if (!root.ContainsChild(pattern[0]))
@@ -89,12 +89,12 @@ public class SuffixTree
         var node = _nodes[nodeIndex];
         for (var i = node.Start; i < node.End; i++)
         {
-            if (index > pattern.Length - 1 || i > _text.Length - 1)
+            if (index > pattern.Length - 1 || i > _text.Span.Length - 1)
             {
                 return false;
             }
             
-            if (_text[i] == pattern[index])
+            if (_text.Span[i] == pattern[index])
             {
                 index++;
             }
