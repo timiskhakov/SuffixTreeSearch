@@ -12,7 +12,7 @@ public class SuffixTree
         _text = line.AsMemory();
 
         var root = _nodes.Add(new Node(-1, -1));
-        var activePoint = new ActivePoint();
+        var point = new ActivePoint();
         var remainder = 0;
 
         for (var i = 0; i < _text.Span.Length; i++)
@@ -21,50 +21,46 @@ public class SuffixTree
             remainder++;
             while (remainder > 0)
             {
-                if (activePoint.Length == 0)
-                {
-                    activePoint.Edge = i;
-                }
-
-                if (!_nodes[activePoint.Node].ContainsChild(_text.Span[activePoint.Edge]))
+                if (point.Length == 0) point.Edge = i;
+                if (!_nodes[point.Node].Contains(_text.Span[point.Edge]))
                 {
                     var leaf = _nodes.Add(new Node(i, _text.Span.Length));
-                    _nodes[activePoint.Node].PutChild(_text.Span[activePoint.Edge], leaf);
-                    AddSuffixLink(activePoint.Node, ref needSuffixLink);
+                    _nodes[point.Node].Put(_text.Span[point.Edge], leaf);
+                    AddSuffixLink(point.Node, ref needSuffixLink);
                 }
                 else
                 {
-                    var next = _nodes[activePoint.Node][_text.Span[activePoint.Edge]];
-                    if (WalkDown(next, i, ref activePoint)) continue;
+                    var next = _nodes[point.Node][_text.Span[point.Edge]];
+                    if (WalkDown(next, i, ref point)) continue;
 
-                    if (_text.Span[_nodes[next].Start + activePoint.Length] == _text.Span[i])
+                    if (_text.Span[_nodes[next].Start + point.Length] == _text.Span[i])
                     {
-                        activePoint.Length++;
-                        AddSuffixLink(activePoint.Node, ref needSuffixLink);
+                        point.Length++;
+                        AddSuffixLink(point.Node, ref needSuffixLink);
                         break;
                     }
 
-                    var split = _nodes.Add(new Node(_nodes[next].Start, _nodes[next].Start + activePoint.Length));
-                    _nodes[activePoint.Node].PutChild(_text.Span[activePoint.Edge], split);
+                    var split = _nodes.Add(new Node(_nodes[next].Start, _nodes[next].Start + point.Length));
+                    _nodes[point.Node].Put(_text.Span[point.Edge], split);
 
                     var leaf = _nodes.Add(new Node(i, _text.Span.Length));
-                    _nodes[split].PutChild(_text.Span[i], leaf);
-                    _nodes[next].Start += activePoint.Length;
-                    _nodes[split].PutChild(_text.Span[_nodes[next].Start], next);
+                    _nodes[split].Put(_text.Span[i], leaf);
+                    _nodes[next].Start += point.Length;
+                    _nodes[split].Put(_text.Span[_nodes[next].Start], next);
                     AddSuffixLink(split, ref needSuffixLink);
                 }
 
                 remainder--;
 
-                if (activePoint.Node == root && activePoint.Length > 0)
+                if (point.Node == root && point.Length > 0)
                 {
-                    activePoint.Length--;
-                    activePoint.Edge = i - remainder + 1;
+                    point.Length--;
+                    point.Edge = i - remainder + 1;
                 }
                 else
                 {
-                    activePoint.Node = _nodes[activePoint.Node].Link > 0
-                        ? _nodes[activePoint.Node].Link
+                    point.Node = _nodes[point.Node].Link > 0
+                        ? _nodes[point.Node].Link
                         : root;
                 }
             }
@@ -76,7 +72,7 @@ public class SuffixTree
         if (pattern.Length > _text.Span.Length) return false;
         
         var root = _nodes[0];
-        if (!root.ContainsChild(pattern[0]))
+        if (!root.Contains(pattern[0]))
         {
             return false;
         }
@@ -93,7 +89,7 @@ public class SuffixTree
                 if (index == pattern.Length) return true;
             }
 
-            if (!node.ContainsChild(pattern[index])) return false;
+            if (!node.Contains(pattern[index])) return false;
 
             nodeIndex = node[pattern[index]];
         }

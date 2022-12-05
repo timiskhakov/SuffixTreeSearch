@@ -17,19 +17,19 @@ internal class Node
         End = end;
     }
     
+    internal int this[char key] => _children[key];
+    
     internal int EdgeLength(int position)
     {
         return Math.Min(End, position + 1) - Start;
     }
 
-    internal int this[char key] => _children[key];
-
-    internal bool ContainsChild(char key)
+    internal bool Contains(char key)
     {
         return _children.ContainsKey(key);
     }
 
-    internal void PutChild(char key, int value)
+    internal void Put(char key, int value)
     {
         _children[key] = value;
     }
