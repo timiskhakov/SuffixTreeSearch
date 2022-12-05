@@ -28,7 +28,7 @@ public class SuffixTree
 
                 if (!_nodes[activePoint.Node].ContainsChild(_text.Span[activePoint.Edge]))
                 {
-                    var leaf = _nodes.Add(new Node(i));
+                    var leaf = _nodes.Add(new Node(i, _text.Span.Length));
                     _nodes[activePoint.Node].PutChild(_text.Span[activePoint.Edge], leaf);
                     AddSuffixLink(activePoint.Node, ref needSuffixLink);
                 }
@@ -47,7 +47,7 @@ public class SuffixTree
                     var split = _nodes.Add(new Node(_nodes[next].Start, _nodes[next].Start + activePoint.Length));
                     _nodes[activePoint.Node].PutChild(_text.Span[activePoint.Edge], split);
 
-                    var leaf = _nodes.Add(new Node(i));
+                    var leaf = _nodes.Add(new Node(i, _text.Span.Length));
                     _nodes[split].PutChild(_text.Span[i], leaf);
                     _nodes[next].Start += activePoint.Length;
                     _nodes[split].PutChild(_text.Span[_nodes[next].Start], next);
@@ -81,38 +81,24 @@ public class SuffixTree
             return false;
         }
 
-        return Traverse(root[pattern[0]], pattern, 0);
-    }
-
-    private bool Traverse(int nodeIndex, string pattern, int index)
-    {
-        var node = _nodes[nodeIndex];
-        for (var i = node.Start; i < node.End; i++)
-        {
-            if (index > pattern.Length - 1 || i > _text.Span.Length - 1)
-            {
-                return false;
-            }
-            
-            if (_text.Span[i] == pattern[index])
-            {
-                index++;
-            }
-            
-            if (index == pattern.Length)
-            {
-                return true;
-            }
-        }
+        var nodeIndex = root[pattern[0]];
+        var index = 0;
         
-        if (!node.ContainsChild(pattern[index]))
+        while (true)
         {
-            return false;
-        }
+            var node = _nodes[nodeIndex];
+            for (var i = node.Start; i < node.End; i++)
+            {
+                if (_text.Span[i] == pattern[index]) index++;
+                if (index == pattern.Length) return true;
+            }
 
-        return Traverse(node[pattern[index]], pattern, index);
+            if (!node.ContainsChild(pattern[index])) return false;
+
+            nodeIndex = node[pattern[index]];
+        }
     }
-    
+
     private void AddSuffixLink(int node, ref int needSuffixLink)
     {
         if (needSuffixLink > 0)

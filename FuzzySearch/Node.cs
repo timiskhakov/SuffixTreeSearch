@@ -11,7 +11,7 @@ internal class Node
     
     private readonly Dictionary<char, int> _children = new();
 
-    internal Node(int start, int end = int.MaxValue)
+    internal Node(int start, int end)
     {
         Start = start;
         End = end;
