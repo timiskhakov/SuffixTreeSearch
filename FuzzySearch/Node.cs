@@ -9,38 +9,28 @@ internal class Node
     internal int End { get; }
     internal int Link { get; set; }
     
-    private readonly Dictionary<char, int> _next = new();
+    private readonly Dictionary<char, int> _children = new();
 
     internal Node(int start, int end = int.MaxValue)
     {
         Start = start;
         End = end;
     }
-
-    internal int GetValueByKey(char key)
-    {
-        return _next[key];
-    }
-
-    internal bool ContainsKey(char key)
-    {
-        return _next.ContainsKey(key);
-    }
-
-    internal void AddOrUpdate(char key, int value)
-    {
-        if (_next.ContainsKey(key))
-        {
-            _next[key] = value;
-        }
-        else
-        {
-            _next.Add(key, value);   
-        }
-    }
-
+    
     internal int EdgeLength(int position)
     {
         return Math.Min(End, position + 1) - Start;
+    }
+
+    internal int this[char key] => _children[key];
+
+    internal bool ContainsChild(char key)
+    {
+        return _children.ContainsKey(key);
+    }
+
+    internal void PutChild(char key, int value)
+    {
+        _children[key] = value;
     }
 }
