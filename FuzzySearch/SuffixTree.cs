@@ -86,10 +86,7 @@ public class SuffixTree
             for (var i = node.Start; i < node.End; i++)
             {
                 if (_text.Span[i] == pattern[index]) index++;
-                if (index == pattern.Length)
-                {
-                    return i - index + 1;
-                }
+                if (index == pattern.Length) return i - index + 1;
             }
 
             if (!node.Contains(pattern[index])) return -1;
