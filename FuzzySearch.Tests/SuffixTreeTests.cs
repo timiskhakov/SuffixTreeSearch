@@ -10,8 +10,8 @@ public class SuffixTreeTests
     [InlineData("abcxabcd", "abcxabc", true)]
     [InlineData("abcxabcd", "bcxabcd", true)]
     [InlineData("abcxabcd", "cxabc", true)]
-    [InlineData("abcxabcd", "cxabc", true)]
     [InlineData("abcxabcd", "abcxabcd", true)]
+    [InlineData("abcxabcd", "cxabca", false)]
     [InlineData("abcxabcd", "xyz", false)]
     [InlineData("abcxabcd", "abcxabcdb", false)]
     public void CtorTests(string text, string pattern, bool expected)
