@@ -67,14 +67,14 @@ public class SuffixTree
         }
     }
 
-    public bool Search(string pattern)
+    public int Search(string pattern)
     {
-        if (pattern.Length > _text.Span.Length) return false;
+        if (pattern.Length > _text.Span.Length) return -1;
         
         var root = _nodes[0];
         if (!root.Contains(pattern[0]))
         {
-            return false;
+            return -1;
         }
 
         var nodeIndex = root[pattern[0]];
@@ -86,10 +86,13 @@ public class SuffixTree
             for (var i = node.Start; i < node.End; i++)
             {
                 if (_text.Span[i] == pattern[index]) index++;
-                if (index == pattern.Length) return true;
+                if (index == pattern.Length)
+                {
+                    return i - index + 1;
+                }
             }
 
-            if (!node.Contains(pattern[index])) return false;
+            if (!node.Contains(pattern[index])) return -1;
 
             nodeIndex = node[pattern[index]];
         }

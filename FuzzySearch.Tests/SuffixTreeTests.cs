@@ -5,16 +5,16 @@ namespace FuzzySearch.Tests;
 public class SuffixTreeTests
 {
     [Theory]
-    [InlineData("aa aäa aa", "aäa", true)]
-    [InlineData("abcxabcd", "xab", true)]
-    [InlineData("abcxabcd", "abcxabc", true)]
-    [InlineData("abcxabcd", "bcxabcd", true)]
-    [InlineData("abcxabcd", "cxabc", true)]
-    [InlineData("abcxabcd", "abcxabcd", true)]
-    [InlineData("abcxabcd", "cxabca", false)]
-    [InlineData("abcxabcd", "xyz", false)]
-    [InlineData("abcxabcd", "abcxabcdb", false)]
-    public void CtorTests(string text, string pattern, bool expected)
+    [InlineData("aa aäa aa", "aäa", 3)]
+    [InlineData("abcxabcd", "xab", 3)]
+    [InlineData("abcxabcd", "abcxabc", 0)]
+    [InlineData("abcxabcd", "bcxabcd", 1)]
+    [InlineData("abcxabcd", "cxabc", 2)]
+    [InlineData("abcxabcd", "abcxabcd", 0)]
+    [InlineData("abcxabcd", "cxabca", -1)]
+    [InlineData("abcxabcd", "xyz", -1)]
+    [InlineData("abcxabcd", "abcxabcdb", -1)]
+    public void CtorTests(string text, string pattern, int expected)
     {
         Assert.Equal(expected, new SuffixTree(text).Search(pattern));
     }
