@@ -1,4 +1,4 @@
-namespace FuzzySearch;
+namespace SuffixTreeSearch;
 
 internal struct ActivePoint
 {

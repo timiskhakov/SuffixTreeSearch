@@ -1,6 +1,6 @@
 using System;
 
-namespace FuzzySearch;
+namespace SuffixTreeSearch;
 
 public class SuffixTree
 {

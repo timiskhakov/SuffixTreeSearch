@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FuzzySearch;
+namespace SuffixTreeSearch;
 
 internal static class Program
 {

@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuzzySearch", "FuzzySearch\FuzzySearch.csproj", "{D68D1F33-263C-47BB-8F03-492AFB500783}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuffixTreeSearch", "SuffixTreeSearch\SuffixTreeSearch.csproj", "{D68D1F33-263C-47BB-8F03-492AFB500783}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuzzySearch.Tests", "FuzzySearch.Tests\FuzzySearch.Tests.csproj", "{28DC8771-EBCD-4E99-AFAA-F78D1C54FE9F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuffixTreeSearch.Tests", "SuffixTreeSearch.Tests\SuffixTreeSearch.Tests.csproj", "{28DC8771-EBCD-4E99-AFAA-F78D1C54FE9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

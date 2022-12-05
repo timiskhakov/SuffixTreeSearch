@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FuzzySearch\FuzzySearch.csproj" />
+      <ProjectReference Include="..\SuffixTreeSearch\SuffixTreeSearch.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace FuzzySearch;
+namespace SuffixTreeSearch;
 
 internal class NodeCollection
 {

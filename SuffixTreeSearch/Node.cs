@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace FuzzySearch;
+namespace SuffixTreeSearch;
 
 internal class Node
 {
