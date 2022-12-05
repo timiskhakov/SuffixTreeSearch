@@ -17,16 +17,6 @@ internal class Node
         End = end;
     }
 
-    // internal int CountChildren()
-    // {
-    //     return _next.Count;
-    // }
-    //
-    // internal int GetValueByIndex(int index)
-    // {
-    //     return _next.ElementAt(index).Value;
-    // }
-    
     internal int GetValueByKey(char key)
     {
         return _next[key];

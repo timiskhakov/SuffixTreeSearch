@@ -1,10 +1,8 @@
-using System.Collections.Generic;
-
 namespace FuzzySearch;
 
 public class SuffixTree
 {
-    private readonly List<Node> _nodes = new();
+    private readonly NodeCollection _nodes = new();
     private readonly char[] _text;
 
     public SuffixTree(string line)
@@ -12,8 +10,7 @@ public class SuffixTree
         _text = new char[line.Length];
 
         var position = -1;
-        _nodes.Add(new Node(-1, -1));
-        var root = _nodes.Count - 1;
+        var root = _nodes.Add(new Node(-1, -1));
         var activePoint = new ActivePoint();
         var remainder = 0;
 
@@ -31,8 +28,7 @@ public class SuffixTree
             
                 if (!_nodes[activePoint.Node].ContainsKey(_text[activePoint.Edge]))
                 {
-                    _nodes.Add(new Node(position));
-                    var leaf = _nodes.Count - 1;
+                    var leaf = _nodes.Add(new Node(position));
                     _nodes[activePoint.Node].AddOrUpdate(_text[activePoint.Edge], leaf);
                     AddSuffixLink(activePoint.Node, ref needSuffixLink);
                 }
@@ -48,12 +44,10 @@ public class SuffixTree
                         break;
                     }
                 
-                    _nodes.Add(new Node(_nodes[next].Start, _nodes[next].Start + activePoint.Length));
-                    var split = _nodes.Count - 1;
+                    var split = _nodes.Add(new Node(_nodes[next].Start, _nodes[next].Start + activePoint.Length));
                     _nodes[activePoint.Node].AddOrUpdate(_text[activePoint.Edge], split);
-                
-                    _nodes.Add(new Node(position));
-                    var leaf = _nodes.Count - 1;
+                    
+                    var leaf = _nodes.Add(new Node(position));
                     _nodes[split].AddOrUpdate(line[i], leaf);
                     _nodes[next].Start += activePoint.Length;
                     _nodes[split].AddOrUpdate(_text[_nodes[next].Start], next);
