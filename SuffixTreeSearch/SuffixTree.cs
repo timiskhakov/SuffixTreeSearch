@@ -71,28 +71,24 @@ public class SuffixTree
     {
         if (pattern.Length > _text.Span.Length) return -1;
         
-        var root = _nodes[0];
-        if (!root.Contains(pattern[0]))
-        {
-            return -1;
-        }
-
-        var nodeIndex = root[pattern[0]];
-        var index = 0;
+        var node = _nodes[0];
+        var ch = pattern[0];
+        var patternIndex = 0;
         
-        while (true)
+        while (node.Contains(ch))
         {
-            var node = _nodes[nodeIndex];
+            var nodeIndex = node[ch];
+            node = _nodes[nodeIndex];
             for (var i = node.Start; i < node.End; i++)
             {
-                if (_text.Span[i] == pattern[index]) index++;
-                if (index == pattern.Length) return i - index + 1;
+                if (_text.Span[i] == pattern[patternIndex]) patternIndex++;
+                if (patternIndex == pattern.Length) return i - patternIndex + 1;
             }
 
-            if (!node.Contains(pattern[index])) return -1;
-
-            nodeIndex = node[pattern[index]];
+            ch = pattern[patternIndex];
         }
+
+        return -1;
     }
 
     private void AddSuffixLink(int node, ref int needSuffixLink)
