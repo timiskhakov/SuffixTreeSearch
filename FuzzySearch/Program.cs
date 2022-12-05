@@ -1,10 +1,12 @@
-﻿namespace FuzzySearch;
+﻿using System;
+
+namespace FuzzySearch;
 
 internal static class Program
 {
     private static void Main()
     {
-        var suffixTree = new SuffixTree("abcxabcd");
-        var q = suffixTree.Search(      "bcxab");
+        var suffixTree = new SuffixTree("aaaäaaa");
+        Console.WriteLine(suffixTree.Search("aäa"));
     }
 }
