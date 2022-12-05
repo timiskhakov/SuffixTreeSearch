@@ -6,7 +6,7 @@ internal static class Program
 {
     private static void Main()
     {
-        var suffixTree = new SuffixTree("aaaäaaa");
-        Console.WriteLine(suffixTree.Search("aäa"));
+        var suffixTree = new SuffixTree("abcxabcd");
+        Console.WriteLine(suffixTree.Search("abcxabaaa"));
     }
 }
