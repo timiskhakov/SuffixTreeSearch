@@ -5,11 +5,11 @@ namespace SuffixTreeSearch;
 
 internal class Node
 {
+    private readonly Dictionary<char, int> _children = new();
+    
     internal int Start { get; set; }
     internal int End { get; }
     internal int Link { get; set; }
-    
-    private readonly Dictionary<char, int> _children = new();
 
     internal Node(int start, int end)
     {

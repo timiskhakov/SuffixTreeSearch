@@ -72,20 +72,20 @@ public class SuffixTree
         if (pattern.Length > _text.Span.Length) return -1;
         
         var node = _nodes[0];
-        var ch = pattern[0];
-        var patternIndex = 0;
+        var c = pattern[0];
+        var patternIdx = 0;
         
-        while (node.Contains(ch))
+        while (node.Contains(c))
         {
-            var nodeIndex = node[ch];
-            node = _nodes[nodeIndex];
+            var nodeIdx = node[c];
+            node = _nodes[nodeIdx];
             for (var i = node.Start; i < node.End; i++)
             {
-                if (_text.Span[i] == pattern[patternIndex]) patternIndex++;
-                if (patternIndex == pattern.Length) return i - patternIndex + 1;
+                if (_text.Span[i] == pattern[patternIdx]) patternIdx++;
+                if (patternIdx == pattern.Length) return i - patternIdx + 1;
             }
 
-            ch = pattern[patternIndex];
+            c = pattern[patternIdx];
         }
 
         return -1;
