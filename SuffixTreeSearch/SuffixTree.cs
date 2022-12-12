@@ -12,7 +12,7 @@ public class SuffixTree
         _text = line.AsMemory();
 
         var root = _nodes.Add(new Node(-1, -1));
-        var point = new ActivePoint();
+        var ap = new ActivePoint();
         var remainder = 0;
 
         for (var i = 0; i < _text.Span.Length; i++)
@@ -21,46 +21,46 @@ public class SuffixTree
             remainder++;
             while (remainder > 0)
             {
-                if (point.Length == 0) point.Edge = i;
-                if (!_nodes[point.Node].Contains(_text.Span[point.Edge]))
+                if (ap.Length == 0) ap.Edge = i;
+                if (!_nodes[ap.Node].Contains(_text.Span[ap.Edge]))
                 {
                     var leaf = _nodes.Add(new Node(i, _text.Span.Length));
-                    _nodes[point.Node].Put(_text.Span[point.Edge], leaf);
-                    AddSuffixLink(point.Node, ref needSuffixLink);
+                    _nodes[ap.Node].Put(_text.Span[ap.Edge], leaf);
+                    AddSuffixLink(ap.Node, ref needSuffixLink);
                 }
                 else
                 {
-                    var next = _nodes[point.Node][_text.Span[point.Edge]];
-                    if (WalkDown(next, i, ref point)) continue;
+                    var next = _nodes[ap.Node][_text.Span[ap.Edge]];
+                    if (WalkDown(next, i, ref ap)) continue;
 
-                    if (_text.Span[_nodes[next].Start + point.Length] == _text.Span[i])
+                    if (_text.Span[_nodes[next].Start + ap.Length] == _text.Span[i])
                     {
-                        point.Length++;
-                        AddSuffixLink(point.Node, ref needSuffixLink);
+                        ap.Length++;
+                        AddSuffixLink(ap.Node, ref needSuffixLink);
                         break;
                     }
 
-                    var split = _nodes.Add(new Node(_nodes[next].Start, _nodes[next].Start + point.Length));
-                    _nodes[point.Node].Put(_text.Span[point.Edge], split);
+                    var split = _nodes.Add(new Node(_nodes[next].Start, _nodes[next].Start + ap.Length));
+                    _nodes[ap.Node].Put(_text.Span[ap.Edge], split);
 
                     var leaf = _nodes.Add(new Node(i, _text.Span.Length));
                     _nodes[split].Put(_text.Span[i], leaf);
-                    _nodes[next].Start += point.Length;
+                    _nodes[next].Start += ap.Length;
                     _nodes[split].Put(_text.Span[_nodes[next].Start], next);
                     AddSuffixLink(split, ref needSuffixLink);
                 }
 
                 remainder--;
 
-                if (point.Node == root && point.Length > 0)
+                if (ap.Node == root && ap.Length > 0)
                 {
-                    point.Length--;
-                    point.Edge = i - remainder + 1;
+                    ap.Length--;
+                    ap.Edge = i - remainder + 1;
                 }
                 else
                 {
-                    point.Node = _nodes[point.Node].Link > 0
-                        ? _nodes[point.Node].Link
+                    ap.Node = _nodes[ap.Node].Link > 0
+                        ? _nodes[ap.Node].Link
                         : root;
                 }
             }
@@ -101,13 +101,13 @@ public class SuffixTree
         needSuffixLink = node;
     }
     
-    private bool WalkDown(int next, int position, ref ActivePoint activePoint)
+    private bool WalkDown(int next, int position, ref ActivePoint ap)
     {
-        if (activePoint.Length < _nodes[next].EdgeLength(position)) return false;
+        if (ap.Length < _nodes[next].EdgeLength(position)) return false;
         
-        activePoint.Edge += _nodes[next].EdgeLength(position);
-        activePoint.Length -= _nodes[next].EdgeLength(position);
-        activePoint.Node = next;
+        ap.Edge += _nodes[next].EdgeLength(position);
+        ap.Length -= _nodes[next].EdgeLength(position);
+        ap.Node = next;
         
         return true;
     }
