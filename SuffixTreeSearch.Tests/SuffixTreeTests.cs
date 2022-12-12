@@ -14,6 +14,7 @@ public class SuffixTreeTests
     [InlineData("abcxabcd", "cxabca", -1)]
     [InlineData("abcxabcd", "xyz", -1)]
     [InlineData("abcxabcd", "abcxabcdb", -1)]
+    [InlineData("a", "", -1)]
     public void Searches(string text, string pattern, int expected)
     {
         Assert.Equal(expected, new SuffixTree(text).Search(pattern));

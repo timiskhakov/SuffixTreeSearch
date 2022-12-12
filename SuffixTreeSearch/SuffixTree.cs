@@ -69,7 +69,7 @@ public class SuffixTree
 
     public int Search(string pattern)
     {
-        if (pattern.Length > _text.Span.Length) return -1;
+        if (string.IsNullOrEmpty(pattern) || pattern.Length > _text.Span.Length) return -1;
         
         var node = _nodes[0];
         var c = pattern[0];
