@@ -9,7 +9,7 @@ internal class Node
     
     internal int Start { get; set; }
     internal int End { get; }
-    internal int Link { get; set; }
+    internal int SuffixLink { get; set; } = -1;
 
     internal Node(int start, int end)
     {
@@ -17,12 +17,12 @@ internal class Node
         End = end;
     }
     
-    internal int this[char key] => _children[key];
-    
     internal int EdgeLength(int position)
     {
         return Math.Min(End, position + 1) - Start;
     }
+    
+    internal int this[char key] => _children[key];
 
     internal bool Contains(char key)
     {

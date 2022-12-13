@@ -9,9 +9,9 @@ public class SuffixTree
 
     public SuffixTree(string line)
     {
-        _text = line.AsMemory();
+        _text = line.AsMemory(); // (1)
 
-        var root = _nodes.Add(new Node(-1, -1));
+        var root = _nodes.Add(new Node(-1, -1)); // (2)
         var ap = new ActivePoint();
         var remainder = 0;
 
@@ -59,8 +59,8 @@ public class SuffixTree
                 }
                 else
                 {
-                    ap.Node = _nodes[ap.Node].Link > 0
-                        ? _nodes[ap.Node].Link
+                    ap.Node = _nodes[ap.Node].SuffixLink > 0
+                        ? _nodes[ap.Node].SuffixLink
                         : root;
                 }
             }
@@ -95,7 +95,7 @@ public class SuffixTree
     {
         if (needSuffixLink > 0)
         {
-            _nodes[needSuffixLink].Link = node;
+            _nodes[needSuffixLink].SuffixLink = node;
         }
         
         needSuffixLink = node;
