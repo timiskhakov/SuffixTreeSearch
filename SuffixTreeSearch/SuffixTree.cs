@@ -9,9 +9,9 @@ public class SuffixTree
 
     public SuffixTree(string line)
     {
-        _text = line.AsMemory(); // (1)
+        _text = line.AsMemory();
 
-        var root = _nodes.Add(new Node(-1, -1)); // (2)
+        var root = _nodes.Add(new Node(-1, -1));
         var ap = new ActivePoint();
         var remainder = 0;
 
