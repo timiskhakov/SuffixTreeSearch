@@ -12,7 +12,7 @@ public class SuffixTree
         _text = line.AsMemory();
 
         var root = _nodes.Add(new Node(-1, -1));
-        var ap = new ActivePoint();
+        var activePoint = new ActivePoint();
         var remainder = 0;
 
         for (var i = 0; i < _text.Span.Length; i++)
@@ -21,46 +21,46 @@ public class SuffixTree
             remainder++;
             while (remainder > 0)
             {
-                if (ap.Length == 0) ap.Edge = i;
-                if (!_nodes[ap.Node].Contains(_text.Span[ap.Edge]))
+                if (activePoint.Length == 0) activePoint.Edge = i;
+                if (!_nodes[activePoint.Node].Contains(_text.Span[activePoint.Edge]))
                 {
                     var leaf = _nodes.Add(new Node(i, _text.Span.Length));
-                    _nodes[ap.Node].Put(_text.Span[ap.Edge], leaf);
-                    AddSuffixLink(ap.Node, ref needSuffixLink);
+                    _nodes[activePoint.Node].Put(_text.Span[activePoint.Edge], leaf);
+                    AddSuffixLink(activePoint.Node, ref needSuffixLink);
                 }
                 else
                 {
-                    var next = _nodes[ap.Node][_text.Span[ap.Edge]];
-                    if (WalkDown(next, i, ref ap)) continue;
+                    var next = _nodes[activePoint.Node][_text.Span[activePoint.Edge]];
+                    if (WalkDown(next, i, ref activePoint)) continue;
 
-                    if (_text.Span[_nodes[next].Start + ap.Length] == _text.Span[i])
+                    if (_text.Span[_nodes[next].Start + activePoint.Length] == _text.Span[i])
                     {
-                        ap.Length++;
-                        AddSuffixLink(ap.Node, ref needSuffixLink);
+                        activePoint.Length++;
+                        AddSuffixLink(activePoint.Node, ref needSuffixLink);
                         break;
                     }
 
-                    var split = _nodes.Add(new Node(_nodes[next].Start, _nodes[next].Start + ap.Length));
-                    _nodes[ap.Node].Put(_text.Span[ap.Edge], split);
+                    var split = _nodes.Add(new Node(_nodes[next].Start, _nodes[next].Start + activePoint.Length));
+                    _nodes[activePoint.Node].Put(_text.Span[activePoint.Edge], split);
 
                     var leaf = _nodes.Add(new Node(i, _text.Span.Length));
                     _nodes[split].Put(_text.Span[i], leaf);
-                    _nodes[next].Start += ap.Length;
+                    _nodes[next].Start += activePoint.Length;
                     _nodes[split].Put(_text.Span[_nodes[next].Start], next);
                     AddSuffixLink(split, ref needSuffixLink);
                 }
 
                 remainder--;
 
-                if (ap.Node == root && ap.Length > 0)
+                if (activePoint.Node == root && activePoint.Length > 0)
                 {
-                    ap.Length--;
-                    ap.Edge = i - remainder + 1;
+                    activePoint.Length--;
+                    activePoint.Edge = i - remainder + 1;
                 }
                 else
                 {
-                    ap.Node = _nodes[ap.Node].SuffixLink > 0
-                        ? _nodes[ap.Node].SuffixLink
+                    activePoint.Node = _nodes[activePoint.Node].SuffixLink > 0
+                        ? _nodes[activePoint.Node].SuffixLink
                         : root;
                 }
             }
