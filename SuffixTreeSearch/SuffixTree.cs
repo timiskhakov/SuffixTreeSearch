@@ -17,7 +17,7 @@ public class SuffixTree
 
         for (var i = 0; i < _text.Span.Length; i++)
         {
-            var needSuffixLink = -1;
+            var needSuffixLink = 0;
             remainder++;
             while (remainder > 0)
             {
@@ -101,13 +101,13 @@ public class SuffixTree
         needSuffixLink = node;
     }
     
-    private bool WalkDown(int next, int position, ref ActivePoint ap)
+    private bool WalkDown(int next, int position, ref ActivePoint activePoint)
     {
-        if (ap.Length < _nodes[next].EdgeLength(position)) return false;
+        if (activePoint.Length < _nodes[next].EdgeLength(position)) return false;
         
-        ap.Edge += _nodes[next].EdgeLength(position);
-        ap.Length -= _nodes[next].EdgeLength(position);
-        ap.Node = next;
+        activePoint.Edge += _nodes[next].EdgeLength(position);
+        activePoint.Length -= _nodes[next].EdgeLength(position);
+        activePoint.Node = next;
         
         return true;
     }
