@@ -3,3 +3,5 @@
 **/obj
 **.user
 .DS_Store
+Benchmark*
+screenlog.0
